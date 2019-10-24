@@ -18,13 +18,25 @@ class SessionController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Informations not valid' });
     }
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
 
-    const userExists = await User.findOne({ where: { email: req.body.email } });
-
-    if (!userExists) {
-      return res.status(401).json();
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
     }
-    return res.json();
+
+    if (!(await user.checkPassowrd(password))) {
+      return res.status(401).json({ error: 'Password Invalid' });
+    }
+
+    const { id, name } = user;
+
+    return res.json({
+      user: { id, name, email },
+      token: jwt.sign({ id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
+      }),
+    });
   }
 }
 
