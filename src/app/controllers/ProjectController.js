@@ -8,7 +8,55 @@ class ProjectController {
       description: Yup.string().required(),
       host: Yup.string().required(),
     });
-    return res.json();
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Invalid informations' });
+    }
+
+    const { name, description, host } = req.body;
+    const user_id = req.userId;
+
+    const projectExists = await Project.findOne({
+      where: { user_id, name },
+    });
+
+    if (projectExists) {
+      return res
+        .status(401)
+        .json({ error: 'You already have a project with that name' });
+    }
+
+    const project = await Project.create({ name, description, host, user_id });
+    return res.json({
+      name: project.name,
+      description: project.description,
+      host: project.host,
+    });
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      description: Yup.string(),
+      host: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Invalid informations' });
+    }
+
+    const projectExists = await Project.findOne({
+      where: { id: req.userId, name: req.body.name },
+    });
+
+    if (projectExists) {
+      return res
+        .status(401)
+        .json({ error: 'You already have a project with that name' });
+    }
+
+    const { name, description, host } = await Project.update(req.body);
+    return res.json({ name, description, host });
   }
 }
 
