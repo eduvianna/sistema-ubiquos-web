@@ -20,5 +20,8 @@ routes.post('/register-avatar', upload.single('file'), FileController.store);
 routes.use(authMiddleware);
 
 routes.put('/update-user', UserController.update);
+
 routes.post('/create-project', ProjectController.store);
+routes.put('/update-project', ProjectController.update);
+
 export default routes;

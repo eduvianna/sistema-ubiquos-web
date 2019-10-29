@@ -36,6 +36,7 @@ class ProjectController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
+      project_id: Yup.number().required(),
       name: Yup.string(),
       description: Yup.string(),
       host: Yup.string(),
@@ -54,8 +55,15 @@ class ProjectController {
         .status(401)
         .json({ error: 'You already have a project with that name' });
     }
+    const project = await Project.findOne({
+      where: { id: req.body.project_id },
+    });
 
-    const { name, description, host } = await Project.update(req.body);
+    if (!project) {
+      return res.status(401).json({ error: 'Project not found' });
+    }
+
+    const { name, description, host } = await project.update(req.body);
     return res.json({ name, description, host });
   }
 }
