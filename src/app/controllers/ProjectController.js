@@ -1,7 +1,28 @@
 import * as Yup from 'yup';
 import Project from '../models/Project';
+import Sensor from '../models/Sensor';
 
 class ProjectController {
+  async index(req, res) {
+    const { page = 1 } = req.params;
+
+    const projects = await Project.findAll({
+      where: { user_id: req.userId },
+      attributes: ['id', 'name', 'description', 'host', 'created_at'],
+      order: ['created_at'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      include: [
+        {
+          model: Sensor,
+          as: 'sensors',
+          attributes: ['name', 'description', 'type'],
+        },
+      ],
+    });
+    return res.json(projects);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -27,6 +48,7 @@ class ProjectController {
     }
 
     const project = await Project.create({ name, description, host, user_id });
+
     return res.json({
       name: project.name,
       description: project.description,

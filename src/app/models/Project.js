@@ -19,12 +19,8 @@ class Project extends Model {
   }
 
   static associate(model) {
-    this.belongsTo(model.File, { foreignKey: 'user_id', as: 'user' });
-    this.belongsToMany(model.Sensor, {
-      through: 'sensors-project',
-      foreignKey: 'project_id',
-      as: 'projects',
-    });
+    this.belongsTo(model.User, { foreignKey: 'user_id', as: 'user' });
+    this.hasMany(model.Sensor, { as: 'sensors' });
   }
 }
 

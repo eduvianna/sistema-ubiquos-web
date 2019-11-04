@@ -7,9 +7,11 @@ class Sensor extends Model {
         name: Sequelize.STRING,
         description: Sequelize.STRING,
         type: Sequelize.STRING,
+        project_id: Sequelize.INTEGER,
       },
       {
         sequelize,
+        tableName: 'sensors',
       }
     );
 
@@ -17,11 +19,7 @@ class Sensor extends Model {
   }
 
   static associate(model) {
-    this.belongsToMany(model.Project, {
-      through: 'sensors-project',
-      foreignKey: 'sensor_id',
-      as: 'sensors',
-    });
+    this.belongsTo(model.Project, { foreignKey: 'project_id', as: 'projects' });
   }
 }
 

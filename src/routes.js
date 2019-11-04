@@ -8,6 +8,7 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import ProjectController from './app/controllers/ProjectController';
+import SensorController from './app/controllers/SensorController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -21,7 +22,11 @@ routes.use(authMiddleware);
 
 routes.put('/update-user', UserController.update);
 
+routes.get('/list-projects', ProjectController.index);
 routes.post('/create-project', ProjectController.store);
 routes.put('/update-project', ProjectController.update);
+
+routes.post('/create-sensor', SensorController.store);
+routes.put('/update-sensor', SensorController.update);
 
 export default routes;

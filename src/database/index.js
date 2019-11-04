@@ -5,10 +5,9 @@ import User from '../app/models/User';
 import File from '../app/models/File';
 import Project from '../app/models/Project';
 import Sensor from '../app/models/Sensor';
-import SensorProject from '../app/models/SensorProject';
 import Measurement from '../app/models/Measurement';
 
-const models = [User, File, Project, Sensor, SensorProject, Measurement];
+const models = [User, File, Project, Sensor, Measurement];
 class Database {
   constructor() {
     this.connection = new Sequelize(databaseConfig);
