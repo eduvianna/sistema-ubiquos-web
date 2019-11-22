@@ -9,6 +9,7 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import ProjectController from './app/controllers/ProjectController';
 import SensorController from './app/controllers/SensorController';
+import MeasurementController from './app/controllers/MeasurementController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -28,5 +29,9 @@ routes.put('/update-project', ProjectController.update);
 
 routes.post('/create-sensor', SensorController.store);
 routes.put('/update-sensor', SensorController.update);
+
+routes.get('/list-measurement', MeasurementController.index);
+routes.post('/create-measurement', MeasurementController.store);
+routes.put('/update-measurement', MeasurementController.update);
 
 export default routes;
