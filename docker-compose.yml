@@ -17,6 +17,8 @@ services:
     ports:
       - '3000:3000'
     command: yarn dev
+    depends_on:
+      - postgres
     volumes:
       - '.:/usr/app'
 
