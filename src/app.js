@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 
 import routes from './routes';
@@ -16,6 +17,10 @@ class App {
     this.server.use(cors());
     this.server.use(express.json());
     this.server.use(express.urlencoded({ extended: false }));
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, 'tmp', 'uploads')),
+    );
   }
 
   routes() {

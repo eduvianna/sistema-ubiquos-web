@@ -13,11 +13,13 @@ class User extends Model {
       },
       {
         sequelize,
-      }
+      },
     );
 
-    this.addHook('beforeSave', async user => {
-      user.password = await bcrypt.hash(user.password_unhash, 8);
+    this.addHook('beforeSave', async (user) => {
+      if (user.password_unhash) {
+        user.password = await bcrypt.hash(user.password_unhash, 8);
+      }
     });
 
     return this;

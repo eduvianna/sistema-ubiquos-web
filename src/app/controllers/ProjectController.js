@@ -4,19 +4,15 @@ import Sensor from '../models/Sensor';
 
 class ProjectController {
   async index(req, res) {
-    const { page = 1 } = req.params;
-
     const projects = await Project.findAll({
       where: { user_id: req.userId },
       attributes: ['id', 'name', 'description', 'host', 'created_at'],
       order: ['created_at'],
-      limit: 20,
-      offset: (page - 1) * 20,
       include: [
         {
           model: Sensor,
           as: 'sensors',
-          attributes: ['name', 'description', 'type'],
+          attributes: ['id', 'name', 'description', 'type'],
         },
       ],
     });
@@ -47,13 +43,14 @@ class ProjectController {
         .json({ error: 'You already have a project with that name' });
     }
 
-    const project = await Project.create({ name, description, host, user_id });
-
-    return res.json({
-      name: project.name,
-      description: project.description,
-      host: project.host,
+    const project = await Project.create({
+      name,
+      description,
+      host,
+      user_id,
     });
+
+    return res.json(project);
   }
 
   async update(req, res) {

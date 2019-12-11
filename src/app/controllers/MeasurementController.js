@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Measurement from '../models/Measurement';
+import Sensor from '../models/Sensor';
 
 class MeasurementController {
   async index(req, res) {
@@ -7,10 +8,18 @@ class MeasurementController {
     const measurements = await Measurement.findAll({
       where: { sensor_id: sensor },
       attributes: ['value', 'created_at'],
-      order: ['created_at'],
+      order: [['created_at', 'DESC']],
     });
 
-    return res.json(measurements);
+    const { name, type } = await Sensor.findOne({
+      where: { id: sensor },
+      attributes: ['name', 'type'],
+    });
+    return res.json({
+      measurements,
+      name,
+      type,
+    });
   }
 
   async store(req, res) {

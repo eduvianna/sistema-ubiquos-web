@@ -17,7 +17,6 @@ const upload = multer(multerConfig);
 routes.post('/register', UserController.store);
 
 routes.post('/login', SessionController.store);
-routes.post('/register-avatar', upload.single('file'), FileController.store);
 
 routes.use(authMiddleware);
 
@@ -33,5 +32,7 @@ routes.put('/update-sensor', SensorController.update);
 routes.get('/list-measurement', MeasurementController.index);
 routes.post('/create-measurement', MeasurementController.store);
 routes.put('/update-measurement', MeasurementController.update);
+
+routes.post('/files', upload.single('file'), FileController.store);
 
 export default routes;

@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
   async store(req, res) {
@@ -35,12 +36,8 @@ class UserController {
       oldPpassword: Yup.string().min(6),
       password_unhash: Yup.string()
         .min(6)
-        .when('oldPassword', (oldPassword, field) =>
-          oldPassword ? field.required() : field
-        ),
-      confirmPassword: Yup.string().when('password_unhash', (password, field) =>
-        password ? field.required().oneOf([Yup.ref('password_unhash')]) : field
-      ),
+        .when('oldPassword', (oldPassword, field) => (oldPassword ? field.required() : field),),
+      confirmPassword: Yup.string().when('password_unhash', (password, field) => (password ? field.required().oneOf([Yup.ref('password_unhash')]) : field),),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -62,9 +59,24 @@ class UserController {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
-    const { id, name } = await user.update(req.body);
+    await user.update(req.body);
 
-    return res.json({ id, email, name });
+    const { id, name, avatar } = await User.findByPk(req.userId, {
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+
+    return res.json({
+      id,
+      email,
+      name,
+      avatar,
+    });
   }
 }
 

@@ -16,7 +16,7 @@ class Measurement extends Model {
   }
 
   static associate(model) {
-    this.hasMany(model.Sensor, { foreignKey: 'sensor_id' });
+    this.hasMany(model.Sensor, { foreignKey: 'sensor_id', as: 'sensor' });
   }
 }
 
