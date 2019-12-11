@@ -3,6 +3,7 @@ version: '3'
 services:
   postgres:
     image: postgres:alpine
+    container_name: 'pg-ubiquos'
     ports:
       - '5432:5432'
     environment:
@@ -19,6 +20,8 @@ services:
     command: yarn dev
     depends_on:
       - postgres
+    environment:
+      - DB_HOST=pg-ubiquos
     volumes:
       - '.:/usr/app'
 
